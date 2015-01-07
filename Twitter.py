@@ -53,10 +53,10 @@ def getSentiment(text):
 #save to mongodb database		
 def saveToDB( tweet_json):	
 	client = MongoClient('mongodb://nishada:110330V@ds031271.mongolab.com:31271/twittersentiment')	
-	db = client.twittersentiment.tweets	
+	db = client.twittersentiment.tweet_collection	
 	
 	for tweet in tweet_json:
-		tweets = {'tweet_json': tweet, 'sentiment_json':getSentiment(tweet['text'])}
+		tweets = {'tweet_json': tweet, 'sentiment_json':getSentiment(tweet['text']), 'saved_time':datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 		db.insert(tweets)	
 	client.close()
 
@@ -71,5 +71,6 @@ while True :
 	if len(data) != 0 :
 		updateSinceID(data[0]['id_str'])
 	saveToDB(data)
-	
-	time.sleep(60)
+	print "saved to database "
+	print "sleeping ...."
+	time.sleep(60*15)
